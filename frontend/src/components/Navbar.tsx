@@ -47,7 +47,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      notifAPI.getAll().then(r => setNotifications(r.data.notifications, r.data.unread)).catch(() => {});
+      notifAPI.getAll().then(r => setNotifications(r.data.notifications, r.data.unread)).catch(() => { });
     }
   }, [isAuthenticated]);
 
@@ -59,17 +59,16 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: 'https://www.recurrentauto.com', label: 'Battery Health Check', external: true },
+    { href: 'https://devbatteryguardian.vercel.app/', label: 'Battery Health Check', external: true },
     { href: '/stations', label: 'Slot Booking' },
     { href: '/about', label: 'About' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled
-        ? 'bg-[#679e24]/95 dark:bg-[#060b13]/95 backdrop-blur-md shadow-lg py-2 pointer-events-auto'
-        : 'bg-transparent py-4 pointer-events-none'
-    }`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+      ? 'bg-[#679e24]/95 dark:bg-[#060b13]/95 backdrop-blur-md shadow-lg py-2 pointer-events-auto'
+      : 'bg-transparent py-4 pointer-events-none'
+      }`}>
       <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 pointer-events-auto">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
@@ -89,11 +88,10 @@ export default function Navbar() {
               <Link key={link.href} href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
-                  pathname === link.href
-                    ? 'bg-white text-[#416823] shadow-sm'
-                    : 'text-white hover:text-white hover:bg-white/20'
-                }`}>
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-200 ${pathname === link.href
+                  ? 'bg-white text-[#416823] shadow-sm'
+                  : 'text-white hover:text-white hover:bg-white/20'
+                  }`}>
                 {link.label}
               </Link>
             ))}

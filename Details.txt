@@ -1,0 +1,18 @@
+Admin:- admin@chargepointx.in	Admin@123
+
+Manager:- sumant11112004@gmail.com 9afd2460
+
+Mechanic:- sumant091123@gmail.com  78aafa63
+
+User:- sumantkumar11112004@gmail.com  Sumant@2004
+
+card 4718 6091 0820 4366 12/26     cvv 123
+
+
+Render Backend:-  https://dashboard.render.com/web/srv-d86jped7vvec73aa5a60/deploys/dep-d86jvbuk1jcs739bs9j0?r=2026-05-20%4004%3A58%3A27%7E2026-05-20%4005%3A01%3A11
+
+URL:- https://ev-guardian-backend.onrender.com
+
+Vercel Frontend:- https://vercel.com/sumantkumar11112004-4023s-projects
+
+URL:- https://ev-guardian.vercel.app/

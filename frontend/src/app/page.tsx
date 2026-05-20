@@ -270,7 +270,7 @@ export default function HomePage() {
                            Ensure your vehicle's battery is performing at its best. Our advanced diagnostic integration provides real-time insights into your battery's capacity, health metrics, and projected lifespan. Catch potential issues before they leave you stranded.
                         </p>
                         <div className="flex justify-start mt-auto pt-4">
-                           <a href="https://www.recurrentauto.com" target="_blank" rel="noopener noreferrer" className="bg-[#8cc63f] text-black dark:text-white px-8 py-4 rounded-full font-bold hover:bg-[#679e24] transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(140,198,63,0.3)] hover:-translate-y-1">
+                           <a href="https://devbatteryguardian.vercel.app/" target="_blank" rel="noopener noreferrer" className="bg-[#8cc63f] text-black dark:text-white px-8 py-4 rounded-full font-bold hover:bg-[#679e24] transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(140,198,63,0.3)] hover:-translate-y-1">
                               Check Battery Health <span className="text-xl leading-none">›</span>
                            </a>
                         </div>
