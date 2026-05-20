@@ -11,7 +11,7 @@ const generateRef = () => 'CPX-' + uuidv4().split('-')[0].toUpperCase();
 // @desc Create booking
 exports.createBooking = async (req, res, next) => {
   try {
-    const { stationId, chargerIndex, startTime, endTime, duration, vehicleNumber } = req.body;
+    const { stationId, chargerIndex, startTime, endTime, duration, vehicleNumber, paymentMethod } = req.body;
     if (!vehicleNumber) return res.status(400).json({ success: false, message: 'Vehicle number is required' });
     const station = await Station.findById(stationId);
     if (!station) return res.status(404).json({ success: false, message: 'Station not found' });
@@ -67,6 +67,43 @@ exports.createBooking = async (req, res, next) => {
       type: 'booking_confirmed',
       link: `/bookings/${booking._id}`,
     });
+
+    // Send confirmation email immediately for cash payments
+    if (paymentMethod === 'cash') {
+      try {
+        const sendEmail = require('../utils/sendEmail');
+        const emailHtml = `
+          <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #8cc63f; text-align: center;">EV Guardian Booking Reserved (Cash Payment)</h2>
+            <p>Hi ${req.user.name},</p>
+            <p>Your slot reservation was successful. Please pay in cash at the station upon arrival. Here are your booking details:</p>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e2e8f0;">
+              <p style="margin: 5px 0;"><strong>Reference ID:</strong> ${booking.bookingRef}</p>
+              <p style="margin: 5px 0;"><strong>Station:</strong> ${station.name}</p>
+              <p style="margin: 5px 0;"><strong>Address:</strong> ${station.address?.street || ''}, ${station.address?.city || ''}</p>
+              <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date(startTime).toLocaleDateString()}</p>
+              <p style="margin: 5px 0;"><strong>Time:</strong> ${new Date(startTime).toLocaleTimeString()} - ${new Date(endTime).toLocaleTimeString()}</p>
+              <p style="margin: 5px 0;"><strong>Charger Type:</strong> ${charger.type}</p>
+              <p style="margin: 5px 0;"><strong>Duration:</strong> ${duration} minutes</p>
+              <p style="margin: 5px 0;"><strong>Estimated Cost:</strong> ₹${estimatedCost.toFixed(0)}</p>
+            </div>
+            <div style="text-align: center; margin: 30px 0; background: #f0fdf4; border: 2px dashed #8cc63f; border-radius: 12px; padding: 20px; max-width: 300px; margin: 20px auto;">
+              <p style="color: #166534; font-size: 12px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; margin: 0 0 8px 0;">Your Check-In PIN</p>
+              <h1 style="color: #15803d; font-family: monospace; font-size: 32px; font-weight: 900; letter-spacing: 8px; margin: 0; padding: 0;">${booking.pin || '------'}</h1>
+              <p style="color: #64748b; font-size: 11px; margin: 8px 0 0 0;">Provide this 6-digit code to the station manager upon arrival to check-in and start your charging session.</p>
+            </div>
+            <p style="color: #64748b; font-size: 14px; text-align: center;">Thank you for driving electric with EV Guardian!</p>
+          </div>
+        `;
+        await sendEmail({
+          to: req.user.email,
+          subject: `Booking Reserved: ${booking.bookingRef}`,
+          html: emailHtml
+        });
+      } catch (emailErr) {
+        console.error("[Email System] Failed to send cash booking email:", emailErr);
+      }
+    }
 
     const populated = await booking.populate('station', 'name address images');
     res.status(201).json({ success: true, booking: populated });

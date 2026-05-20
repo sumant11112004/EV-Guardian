@@ -64,6 +64,33 @@ export default function Navbar() {
     { href: '/about', label: 'About' },
   ];
 
+  const getNavLinks = () => {
+    const links = [...navLinks];
+    if (isAuthenticated && user) {
+      if (user.role === 'mechanic') {
+        links.push({ href: '/mechanic/dashboard', label: 'Mechanic Panel' });
+      } else if (['admin', 'superadmin'].includes(user.role)) {
+        links.push({ href: '/admin', label: 'Admin Panel' });
+      } else if (user.role === 'manager') {
+        links.push({ href: '/admin', label: 'Manager Panel' });
+      }
+    }
+    return links;
+  };
+
+  const getDisplayName = () => {
+    if (!user) return '';
+    const name = user.name || '';
+    if (name.includes('@')) {
+      const parts = name.split('@');
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    }
+    if (user.role === 'admin' && (name.toLowerCase().includes('admin') || name.length > 15)) return 'Admin';
+    if (user.role === 'manager' && (name.toLowerCase().includes('manager') || name.length > 15)) return 'Manager';
+    if (user.role === 'mechanic' && (name.toLowerCase().includes('mechanic') || name.length > 15)) return 'Mechanic';
+    return name.split(' ')[0];
+  };
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
       ? 'bg-[#679e24]/95 dark:bg-[#060b13]/95 backdrop-blur-md shadow-lg py-2 pointer-events-auto'
@@ -84,7 +111,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1 bg-black/10 rounded-full px-1.5 py-1.5 backdrop-blur-sm border border-white/10 shadow-inner">
-            {navLinks.map(link => (
+            {getNavLinks().map(link => (
               <Link key={link.href} href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
@@ -144,19 +171,41 @@ export default function Navbar() {
                 <div className="relative">
                   <button onClick={() => setUserDropdown(!userDropdown)}
                     className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full bg-black/10 hover:bg-black/20 border border-white/10 transition-all shadow-sm">
-                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#416823] font-black text-sm shadow-sm">
-                      {user?.name?.charAt(0).toUpperCase()}
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#416823] font-black text-sm shadow-sm shrink-0">
+                      {getDisplayName().charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-sm text-white font-bold max-w-[90px] truncate drop-shadow-sm">{user?.name?.split(' ')[0]}</span>
-                    <ChevronDown size={14} className={`text-white transition-transform ${userDropdown ? 'rotate-180' : ''}`} />
+                    <div className="flex flex-col items-start leading-none gap-0.5">
+                      <span className="text-xs text-white font-black truncate max-w-[90px] drop-shadow-sm">{getDisplayName()}</span>
+                      {user?.role && user.role !== 'user' && (
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider ${
+                          user.role === 'admin' || user.role === 'superadmin' ? 'bg-[#8cc63f] text-black' :
+                          user.role === 'manager' ? 'bg-blue-500 text-white' :
+                          'bg-orange-500 text-white'
+                        }`}>
+                          {user.role}
+                        </span>
+                      )}
+                    </div>
+                    <ChevronDown size={14} className={`text-white transition-transform shrink-0 ${userDropdown ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence>
                     {userDropdown && (
                       <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }} transition={{ duration: 0.2 }}
                         className="absolute right-0 top-14 w-56 bg-white rounded-2xl shadow-2xl border border-black/5 overflow-hidden">
                         <div className="p-4 border-b border-gray-100 bg-gray-50/80">
-                          <p className="text-gray-900 font-black text-sm truncate">{user?.name}</p>
-                          <p className="text-gray-500 font-medium text-xs truncate mt-0.5">{user?.email}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-gray-900 font-black text-sm truncate">{user?.name}</p>
+                            {user?.role && user.role !== 'user' && (
+                              <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shrink-0 ${
+                                user.role === 'admin' || user.role === 'superadmin' ? 'bg-[#8cc63f] text-black' :
+                                user.role === 'manager' ? 'bg-blue-500 text-white' :
+                                'bg-orange-500 text-white'
+                              }`}>
+                                {user.role}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-gray-500 font-medium text-xs truncate mt-1">{user?.email}</p>
                         </div>
                         <div className="py-2">
                           {[
@@ -207,7 +256,7 @@ export default function Navbar() {
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-white shadow-2xl border-t border-gray-100 rounded-b-3xl absolute w-full top-full">
             <div className="w-full max-w-[1600px] mx-auto px-6 py-6 flex flex-col gap-2">
-              {navLinks.map(link => (
+              {getNavLinks().map(link => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}

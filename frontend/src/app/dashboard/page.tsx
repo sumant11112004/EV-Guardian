@@ -173,26 +173,40 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="min-h-screen bg-transparent text-gray-900 dark:text-white">
       <Navbar />
       <div className="container-xl pt-8 pb-16">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-4xl font-black text-white mb-1 drop-shadow-sm">
-              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'},{' '}
-              <span className="text-[#8cc63f]">{user?.name?.split(' ')[0] || 'Driver'}</span> 👋
+            <h1 className="text-4xl font-black text-white mb-1 drop-shadow-sm flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span>
+                Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'},
+              </span>
+              <span className="text-black dark:text-[#8cc63f]">
+                {user?.name?.split(' ')[0] || 'Driver'}
+              </span>
+              {user?.role && user.role !== 'user' && (
+                <span className={`text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-widest select-none shadow-sm inline-flex items-center justify-center h-6 ${
+                  user.role === 'admin' || user.role === 'superadmin' ? 'bg-black text-[#8cc63f] dark:bg-[#8cc63f] dark:text-black' :
+                  user.role === 'manager' ? 'bg-blue-600 text-white dark:bg-blue-500 dark:text-white' :
+                  'bg-orange-600 text-white dark:bg-orange-500 dark:text-white'
+                }`}>
+                  {user.role}
+                </span>
+              )}
+              <span>👋</span>
             </h1>
-            <p className="text-white/90 font-medium">Welcome to your EV Guardian dashboard.</p>
+            <p className="text-gray-150 dark:text-gray-400 font-medium">Welcome to your EV Guardian dashboard.</p>
           </div>
           {user?.vehicle?.make && (
-            <div className="bg-[#0b1320] border border-[#1a2b42] rounded-2xl px-4 py-2.5 flex items-center gap-3">
+            <div className="bg-white/90 dark:bg-[#0b1320] border border-gray-200 dark:border-[#1a2b42] rounded-2xl px-4 py-2.5 flex items-center gap-3 shadow-md backdrop-blur-md">
               <div className="w-8 h-8 rounded-lg bg-[#8cc63f]/10 border border-[#8cc63f]/20 flex items-center justify-center">
-                <Battery className="text-[#8cc63f]" size={16} />
+                <Battery className="text-black dark:text-[#8cc63f]" size={16} />
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 font-black uppercase tracking-wider">Active Vehicle</p>
-                <p className="text-xs text-white font-bold">{user.vehicle.year} {user.vehicle.make} {user.vehicle.model}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-wider">Active Vehicle</p>
+                <p className="text-xs text-gray-900 dark:text-white font-bold">{user.vehicle.year} {user.vehicle.make} {user.vehicle.model}</p>
               </div>
             </div>
           )}

@@ -66,7 +66,7 @@ export default function StationDetailPage() {
     const end = new Date(start.getTime() + duration * 60000);
     setBooking(true);
     try {
-      const res = await bookingAPI.create({ stationId: station._id, chargerIndex: selectedCharger, startTime: start.toISOString(), endTime: end.toISOString(), duration, vehicleNumber });
+      const res = await bookingAPI.create({ stationId: station._id, chargerIndex: selectedCharger, startTime: start.toISOString(), endTime: end.toISOString(), duration, vehicleNumber, paymentMethod });
       const bookingObj = res.data.booking;
 
       if (paymentMethod === 'cash') {

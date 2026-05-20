@@ -5,10 +5,10 @@ const { sendTokenResponse } = require('../utils/generateToken');
 // @desc Register user
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone, role } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ success: false, message: 'Email already registered' });
-    const user = await User.create({ name, email, password, phone });
+    const user = await User.create({ name, email, password, phone, role });
     sendTokenResponse(user, 201, res);
   } catch (err) { next(err); }
 };

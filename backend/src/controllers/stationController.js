@@ -123,7 +123,6 @@ exports.createStation = async (req, res, next) => {
 
     if (body.managerEmail) {
       const User = require('../models/User');
-      const nodemailer = require('nodemailer');
       const crypto = require('crypto');
       const email = body.managerEmail.toLowerCase().trim();
       let managerUser = await User.findOne({ email });
@@ -145,24 +144,17 @@ exports.createStation = async (req, res, next) => {
       }
       
       try {
-        if (process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD) {
-          const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.SMTP_EMAIL, pass: process.env.SMTP_PASSWORD } });
-          
-          let emailHtml = `<p>You've been assigned as the manager for the station: <strong>${body.name}</strong>.</p>
-                           <p>Your login credentials have been updated to:</p>
-                           <p>Email: <strong>${email}</strong></p>
-                           <p>Password: <strong>${generatedPassword}</strong></p>`;
+        const sendEmail = require('../utils/sendEmail');
+        let emailHtml = `<p>You've been assigned as the manager for the station: <strong>${body.name}</strong>.</p>
+                         <p>Your login credentials have been updated to:</p>
+                         <p>Email: <strong>${email}</strong></p>
+                         <p>Password: <strong>${generatedPassword}</strong></p>`;
 
-          await transporter.sendMail({
-            from: `"${process.env.FROM_NAME || 'ChargePointX'}" <${process.env.SMTP_EMAIL}>`,
-            to: email,
-            subject: `Manager Access: ${body.name}`,
-            html: emailHtml
-          });
-          console.log("Manager assignment email sent successfully to", email);
-        } else {
-          console.log("Email not sent: SMTP_EMAIL/SMTP_PASSWORD missing");
-        }
+        await sendEmail({
+          to: email,
+          subject: `Manager Access: ${body.name}`,
+          html: emailHtml
+        });
       } catch (err) { console.error("Email failed:", err); }
 
       body.manager = managerUser._id;
@@ -170,7 +162,6 @@ exports.createStation = async (req, res, next) => {
 
     if (body.mechanicEmail) {
       const User = require('../models/User');
-      const nodemailer = require('nodemailer');
       const crypto = require('crypto');
       const email = body.mechanicEmail.toLowerCase().trim();
       let mechanicUser = await User.findOne({ email });
@@ -192,24 +183,17 @@ exports.createStation = async (req, res, next) => {
       }
       
       try {
-        if (process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD) {
-          const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.SMTP_EMAIL, pass: process.env.SMTP_PASSWORD } });
-          
-          let emailHtml = `<p>You've been assigned as the mechanic for the station: <strong>${body.name}</strong>.</p>
-                           <p>Your login credentials have been updated to:</p>
-                           <p>Email: <strong>${email}</strong></p>
-                           <p>Password: <strong>${generatedPassword}</strong></p>`;
+        const sendEmail = require('../utils/sendEmail');
+        let emailHtml = `<p>You've been assigned as the mechanic for the station: <strong>${body.name}</strong>.</p>
+                         <p>Your login credentials have been updated to:</p>
+                         <p>Email: <strong>${email}</strong></p>
+                         <p>Password: <strong>${generatedPassword}</strong></p>`;
 
-          await transporter.sendMail({
-            from: `"${process.env.FROM_NAME || 'ChargePointX'}" <${process.env.SMTP_EMAIL}>`,
-            to: email,
-            subject: `Mechanic Access: ${body.name}`,
-            html: emailHtml
-          });
-          console.log("Mechanic assignment email sent successfully to", email);
-        } else {
-          console.log("Email not sent: SMTP_EMAIL/SMTP_PASSWORD missing");
-        }
+        await sendEmail({
+          to: email,
+          subject: `Mechanic Access: ${body.name}`,
+          html: emailHtml
+        });
       } catch (err) { console.error("Email failed:", err); }
 
       body.mechanic = mechanicUser._id;
@@ -258,7 +242,6 @@ exports.updateStation = async (req, res, next) => {
 
     if (body.managerEmail) {
       const User = require('../models/User');
-      const nodemailer = require('nodemailer');
       const crypto = require('crypto');
       const email = body.managerEmail.toLowerCase().trim();
       let managerUser = await User.findOne({ email });
@@ -280,24 +263,17 @@ exports.updateStation = async (req, res, next) => {
       }
       
       try {
-        if (process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD) {
-          const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.SMTP_EMAIL, pass: process.env.SMTP_PASSWORD } });
-          
-          let emailHtml = `<p>You've been assigned as the manager for the station: <strong>${body.name || existingStation.name}</strong>.</p>
-                           <p>Your login credentials have been updated to:</p>
-                           <p>Email: <strong>${email}</strong></p>
-                           <p>Password: <strong>${generatedPassword}</strong></p>`;
+        const sendEmail = require('../utils/sendEmail');
+        let emailHtml = `<p>You've been assigned as the manager for the station: <strong>${body.name || existingStation.name}</strong>.</p>
+                         <p>Your login credentials have been updated to:</p>
+                         <p>Email: <strong>${email}</strong></p>
+                         <p>Password: <strong>${generatedPassword}</strong></p>`;
 
-          await transporter.sendMail({
-            from: `"${process.env.FROM_NAME || 'ChargePointX'}" <${process.env.SMTP_EMAIL}>`,
-            to: email,
-            subject: `Manager Access: ${body.name || existingStation.name}`,
-            html: emailHtml
-          });
-          console.log("Manager assignment email sent successfully to", email);
-        } else {
-          console.log("Email not sent: SMTP_EMAIL/SMTP_PASSWORD missing");
-        }
+        await sendEmail({
+          to: email,
+          subject: `Manager Access: ${body.name || existingStation.name}`,
+          html: emailHtml
+        });
       } catch (err) { console.error("Email failed:", err); }
 
       body.manager = managerUser._id;
@@ -305,7 +281,6 @@ exports.updateStation = async (req, res, next) => {
 
     if (body.mechanicEmail) {
       const User = require('../models/User');
-      const nodemailer = require('nodemailer');
       const crypto = require('crypto');
       const email = body.mechanicEmail.toLowerCase().trim();
       let mechanicUser = await User.findOne({ email });
@@ -327,24 +302,17 @@ exports.updateStation = async (req, res, next) => {
       }
       
       try {
-        if (process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD) {
-          const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.SMTP_EMAIL, pass: process.env.SMTP_PASSWORD } });
-          
-          let emailHtml = `<p>You've been assigned as the mechanic for the station: <strong>${body.name || existingStation.name}</strong>.</p>
-                           <p>Your login credentials have been updated to:</p>
-                           <p>Email: <strong>${email}</strong></p>
-                           <p>Password: <strong>${generatedPassword}</strong></p>`;
+        const sendEmail = require('../utils/sendEmail');
+        let emailHtml = `<p>You've been assigned as the mechanic for the station: <strong>${body.name || existingStation.name}</strong>.</p>
+                         <p>Your login credentials have been updated to:</p>
+                         <p>Email: <strong>${email}</strong></p>
+                         <p>Password: <strong>${generatedPassword}</strong></p>`;
 
-          await transporter.sendMail({
-            from: `"${process.env.FROM_NAME || 'ChargePointX'}" <${process.env.SMTP_EMAIL}>`,
-            to: email,
-            subject: `Mechanic Access: ${body.name || existingStation.name}`,
-            html: emailHtml
-          });
-          console.log("Mechanic assignment email sent successfully to", email);
-        } else {
-          console.log("Email not sent: SMTP_EMAIL/SMTP_PASSWORD missing");
-        }
+        await sendEmail({
+          to: email,
+          subject: `Mechanic Access: ${body.name || existingStation.name}`,
+          html: emailHtml
+        });
       } catch (err) { console.error("Email failed:", err); }
 
       body.mechanic = mechanicUser._id;
