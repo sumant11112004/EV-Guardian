@@ -78,32 +78,42 @@ function MechanicDashboardContent() {
   );
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="min-h-screen bg-transparent text-gray-900 dark:text-white">
       <Navbar />
       <div className="container-xl pt-24 pb-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <h1 className="text-4xl font-black text-white mb-2 flex items-center gap-3 drop-shadow-sm">
-            <Wrench className="text-white" /> Mechanic Dashboard
+          <h1 className="text-4xl font-black text-white mb-1 drop-shadow-sm flex flex-wrap items-center gap-x-3 gap-y-1">
+            <Wrench className="text-white" size={32} />
+            <span>
+              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'},
+            </span>
+            <span className="text-black dark:text-[#8cc63f]">
+              {user?.name?.split(' ')[0] || 'Mechanic'}
+            </span>
+            <span className="text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-widest select-none shadow-sm inline-flex items-center justify-center h-6 bg-orange-600 text-white dark:bg-orange-500 dark:text-white">
+              {user?.role || 'Mechanic'}
+            </span>
+            <span>👋</span>
           </h1>
-          <p className="text-white/90 font-medium">View and manage assistance requests from users.</p>
+          <p className="text-gray-150 dark:text-gray-400 font-medium">View and manage assistance requests from users.</p>
         </motion.div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8">
-          <div className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all">
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Total Requests</p>
-            <p className="text-3xl font-black text-white">{requests.length}</p>
+          <div className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all text-gray-900 dark:text-white backdrop-blur-md">
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Total Requests</p>
+            <p className="text-3xl font-black text-gray-900 dark:text-white">{requests.length}</p>
           </div>
-          <div className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all">
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Pending</p>
-            <p className="text-3xl font-black text-yellow-400">{requests.filter(r => r.status === 'pending').length}</p>
+          <div className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all text-gray-900 dark:text-white backdrop-blur-md">
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Pending</p>
+            <p className="text-3xl font-black text-yellow-600 dark:text-yellow-400">{requests.filter(r => r.status === 'pending').length}</p>
           </div>
-          <div className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all">
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">In Progress</p>
-            <p className="text-3xl font-black text-purple-400">{requests.filter(r => r.status === 'in_progress').length}</p>
+          <div className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all text-gray-900 dark:text-white backdrop-blur-md">
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">In Progress</p>
+            <p className="text-3xl font-black text-purple-600 dark:text-purple-400">{requests.filter(r => r.status === 'in_progress').length}</p>
           </div>
-          <div className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all">
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Completed</p>
+          <div className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all text-gray-900 dark:text-white backdrop-blur-md">
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Completed</p>
             <p className="text-3xl font-black text-[#8cc63f]">{requests.filter(r => r.status === 'completed').length}</p>
           </div>
         </div>

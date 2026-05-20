@@ -58,13 +58,28 @@ function AdminDashboardContent() {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="min-h-screen bg-transparent text-gray-900 dark:text-white">
       <Navbar />
       <div className="container-xl pt-8 pb-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-black text-white mb-1 drop-shadow-sm">{user?.role === 'manager' ? 'Manager Dashboard' : 'Admin Dashboard'}</h1>
-            <p className="text-white/90 font-medium">EV Guardian Operations · Last 30 days</p>
+            <h1 className="text-4xl font-black text-white mb-1 drop-shadow-sm flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span>
+                Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'},
+              </span>
+              <span className="text-black dark:text-[#8cc63f]">
+                {user?.name?.split(' ')[0] || 'Admin'}
+              </span>
+              <span className={`text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-widest select-none shadow-sm inline-flex items-center justify-center h-6 ${
+                user?.role === 'manager' 
+                  ? 'bg-blue-600 text-white dark:bg-blue-500 dark:text-white' 
+                  : 'bg-black text-[#8cc63f] dark:bg-[#8cc63f] dark:text-black'
+              }`}>
+                {user?.role || 'Admin'}
+              </span>
+              <span>👋</span>
+            </h1>
+            <p className="text-gray-150 dark:text-gray-400 font-medium">EV Guardian Operations · Last 30 days</p>
           </div>
           <div className="flex gap-3">
             <Link href="/admin/stations" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold py-2.5 px-5 rounded-full hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"><MapPin size={16} /> Stations</Link>
@@ -74,18 +89,18 @@ function AdminDashboardContent() {
 
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mb-8">
-          {loading ? [...Array(7)].map((_, i) => <div key={i} className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] animate-pulse h-32" />) : (
+          {loading ? [...Array(7)].map((_, i) => <div key={i} className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] animate-pulse h-32" />) : (
             statCards.map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-                className="bg-[#0b1320] rounded-[24px] p-6 border border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all">
+                className="bg-white/95 dark:bg-[#0b1320] rounded-[24px] p-6 border border-gray-200 dark:border-[#1a2b42] shadow-xl hover:-translate-y-1 transition-all text-gray-900 dark:text-white backdrop-blur-md">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${s.color}15` }}>
                     <s.icon size={18} style={{ color: s.color }} />
                   </div>
-                  {s.change && <span className="text-green-400 text-[10px] font-bold uppercase tracking-wider">{s.change}</span>}
+                  {s.change && <span className="text-green-600 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider">{s.change}</span>}
                 </div>
-                <p className="text-2xl font-black text-white mb-1">{s.value}</p>
-                <p className="text-gray-400 font-bold text-[10px] uppercase tracking-wider">{s.label}</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-white mb-1">{s.value}</p>
+                <p className="text-gray-500 dark:text-gray-400 font-bold text-[10px] uppercase tracking-wider">{s.label}</p>
               </motion.div>
             ))
           )}
